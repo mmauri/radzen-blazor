@@ -119,6 +119,15 @@ namespace RadzenBlazorDemos
                         },
                         new Example
                         {
+                            Name = "Column Picker",
+                            New = true,
+                            Path = "datagrid-column-picker",
+                            Title = "Blazor DataGrid column picker",
+                            Tags = new [] { "datagrid", "column", "picker", "chooser" }
+                        },
+                        new Example
+                        {
+                            Updated = true,
                             Name = "Reorder",
                             Path = "datagrid-column-reorder",
                             Title = "Blazor DataGrid column reorder",
@@ -157,6 +166,7 @@ namespace RadzenBlazorDemos
                 },
                 new Example
                 {
+                    Updated = true,
                     Name = "Filtering",
                     Icon = "&#xef4f",
                     Children = new []
@@ -167,6 +177,14 @@ namespace RadzenBlazorDemos
                             Path = "datagrid-simple-filter",
                             Title = "Blazor DataGrid Simple filter mode",
                             Tags = new [] { "filter", "simple", "grid", "datagrid", "table"}
+                        },
+                        new Example
+                        {
+                            New = true,
+                            Name = "Simple with menu",
+                            Path = "datagrid-simple-filter-menu",
+                            Title = "Blazor DataGrid Simple filter mode with menu",
+                            Tags = new [] { "filter", "simple", "grid", "datagrid", "table", "menu" }
                         },
                         new Example
                         {
@@ -453,7 +471,7 @@ namespace RadzenBlazorDemos
         new Example()
         {
             Name = "Images",
-            Icon = "&#xe3d3", 
+            Icon = "&#xe3d3",
             Children = new [] {
                 new Example()
                 {
@@ -486,6 +504,14 @@ namespace RadzenBlazorDemos
                     Path = "accordion",
                     Icon = "&#xe8ee",
                     Tags = new [] { "panel", "container" }
+                },
+                new Example()
+                {
+                    Name = "BreadCrumb",
+                    New = true,
+                    Path = "breadcrumb",
+                    Icon = "&#xeac9",
+                    Tags = new [] { "breadcrumb", "navigation", "menu" }
                 },
                 new Example()
                 {
@@ -548,7 +574,7 @@ namespace RadzenBlazorDemos
                     Icon = "&#xe851",
                     Tags = new [] { "navigation", "dropdown", "menu" }
                 },
-				new Example()
+                new Example()
                 {
                     Name = "Splitter",
                     Path = "splitter",
@@ -568,8 +594,7 @@ namespace RadzenBlazorDemos
                     Path = "tabs",
                     Icon = "&#xe8d8",
                     Tags = new [] { "tabstrip", "tabview", "container" }
-                },
-                
+                }
             }
         },
         new Example()
@@ -931,7 +956,7 @@ namespace RadzenBlazorDemos
                     Icon = "&#xe5ca",
                     Tags = new [] { "validator", "validation", "required"}
                 },
-                
+
             }
         },
 

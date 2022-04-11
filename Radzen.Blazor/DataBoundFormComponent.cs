@@ -150,7 +150,7 @@ namespace Radzen
         /// Gets a value indicating whether this instance has value.
         /// </summary>
         /// <value><c>true</c> if this instance has value; otherwise, <c>false</c>.</value>
-        public bool HasValue
+        public virtual bool HasValue
         {
             get
             {
@@ -219,7 +219,7 @@ namespace Radzen
         /// <summary>
         /// The search text
         /// </summary>
-        protected string searchText;
+        internal string searchText;
 
         /// <summary>
         /// The view

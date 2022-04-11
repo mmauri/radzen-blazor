@@ -22,6 +22,55 @@ namespace Radzen.Blazor
     public partial class RadzenDropDownDataGrid<TValue> : DropDownBase<TValue>
     {
         /// <summary>
+        /// Gets or sets a value indicating whether popup should open on focus. Set to <c>false</c> by default.
+        /// </summary>
+        /// <value><c>true</c> if popup should open on focus; otherwise, <c>false</c>.</value>
+        [Parameter]
+        public bool OpenOnFocus { get; set; }
+
+        private async Task OnFocus(Microsoft.AspNetCore.Components.Web.FocusEventArgs args)
+        {
+            if (OpenOnFocus)
+            {
+                await OpenPopup("Enter", false);
+            }
+        }
+
+        /// <summary>
+        /// Opens the popup.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="isFilter">if set to <c>true</c> [is filter].</param>
+        /// <param name="isFromClick">if set to <c>true</c> [is from click].</param>
+        protected override async System.Threading.Tasks.Task OpenPopup(string key = "ArrowDown", bool isFilter = false, bool isFromClick = false)
+        {
+            if (Disabled)
+                return;
+
+            await JSRuntime.InvokeVoidAsync(OpenOnFocus ? "Radzen.openPopup" : "Radzen.togglePopup", Element, PopupID, true);
+            await JSRuntime.InvokeVoidAsync("Radzen.focusElement", isFilter ? UniqueID : SearchID);
+
+            if (list != null)
+            {
+                await JSRuntime.InvokeVoidAsync("Radzen.selectListItem", search, list, selectedIndex);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the value template.
+        /// </summary>
+        /// <value>The value template.</value>
+        [Parameter]
+        public RenderFragment<dynamic> ValueTemplate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the empty template shown when Data is empty collection.
+        /// </summary>
+        /// <value>The empty template.</value>
+        [Parameter]
+        public RenderFragment EmptyTemplate { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether pager is visible even when not enough data for paging.
         /// </summary>
         /// <value><c>true</c> if pager is visible even when not enough data for paging otherwise, <c>false</c>.</value>
@@ -484,13 +533,25 @@ namespace Radzen.Blazor
         [Parameter]
         public bool AllowFilteringByAllStringColumns { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether DataGrid row can be selected on row click.
+        /// </summary>
+        /// <value><c>true</c> if DataGrid row can be selected on row click; otherwise, <c>false</c>.</value>
+        [Parameter]
+        public bool AllowRowSelectOnRowClick { get; set; } = true;
+
         async Task OnRowSelect(object item)
         {
-            await SelectItem(item);
             if (!Disabled && !Multiple)
             {
                 await JSRuntime.InvokeVoidAsync("Radzen.closePopup", PopupID);
             }
+
+            if (AllowRowSelectOnRowClick)
+            {
+                await SelectItem(item);
+            }
+            
         }
 
         /// <inheritdoc />

@@ -122,6 +122,19 @@ namespace Radzen
             });
         }
 
+        /// <inheritdoc />
+        public override bool HasValue
+        {
+            get
+            {
+                if (typeof(T) == typeof(string))
+                {
+                    return !string.IsNullOrEmpty($"{internalValue}");
+                }
+                return internalValue != null;
+            }
+        }
+
         /// <summary>
         /// Renders the item.
         /// </summary>
@@ -130,6 +143,23 @@ namespace Radzen
         internal virtual void RenderItem(RenderTreeBuilder builder, object item)
         {
             //
+        }
+
+        System.Collections.Generic.HashSet<object> keys = new System.Collections.Generic.HashSet<object>();
+
+        internal object GetKey(object item)
+        {
+            var value = PropertyAccess.GetItemOrValueFromProperty(item, ValueProperty);
+
+            if (!keys.Contains(value))
+            {
+                keys.Add(value);
+                return value;
+            }
+            else
+            {
+                return item;
+            }
         }
 
         /// <summary>
@@ -286,8 +316,6 @@ namespace Radzen
                         selectedItems.Clear();
                     }
 
-                    SelectItemFromValue(internalValue);
-
                     OnDataChanged();
 
                     StateHasChanged();
@@ -303,7 +331,7 @@ namespace Radzen
         {
             get
             {
-                return $"popup{UniqueID}";
+                return $"popup-{GetId()}";
             }
         }
 
@@ -315,7 +343,7 @@ namespace Radzen
         {
             get
             {
-                return $"search{UniqueID}";
+                return $"search-{GetId()}";
             }
         }
 
@@ -361,7 +389,7 @@ namespace Radzen
         /// <summary>
         /// The list
         /// </summary>
-        protected ElementReference list;
+        protected ElementReference? list;
         /// <summary>
         /// The selected index
         /// </summary>
@@ -381,7 +409,10 @@ namespace Radzen
             await JSRuntime.InvokeVoidAsync("Radzen.togglePopup", Element, PopupID, true);
             await JSRuntime.InvokeVoidAsync("Radzen.focusElement", isFilter ? UniqueID : SearchID);
 
-            await JSRuntime.InvokeVoidAsync("Radzen.selectListItem", search, list, selectedIndex);
+            if (list != null)
+            {
+                await JSRuntime.InvokeVoidAsync("Radzen.selectListItem", search, list, selectedIndex);
+            }
         }
 
         /// <summary>
@@ -795,7 +826,7 @@ namespace Radzen
         /// </summary>
         /// <param name="item">The item.</param>
         /// <param name="raiseChange">if set to <c>true</c> [raise change].</param>
-        protected async System.Threading.Tasks.Task SelectItem(object item, bool raiseChange = true)
+        public async System.Threading.Tasks.Task SelectItem(object item, bool raiseChange = true)
         {
             if (!Multiple)
             {
@@ -923,6 +954,14 @@ namespace Radzen
             {
                 selectedItem = null;
             }
+        }
+
+        /// <inheritdoc />
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            keys.Clear();
         }
     }
 }

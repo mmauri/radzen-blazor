@@ -404,7 +404,14 @@ namespace Radzen
             }
             else if (PropertyAccess.IsNumeric(column.FilterPropertyType))
             {
-                return $"{property} {linqOperator} {value}";
+                if (column.GetFilterOperator() == FilterOperator.IsNull || column.GetFilterOperator() == FilterOperator.IsNotNull)
+                {
+                    return $"{property} {linqOperator} null";
+                }
+                else
+                {
+                    return $"{property} {linqOperator} {value}";
+                }
             }
             else if (column.FilterPropertyType == typeof(DateTime) || 
                     column.FilterPropertyType == typeof(DateTime?) ||
@@ -870,7 +877,7 @@ namespace Radzen
                         property = $"({property})";
                     }
 
-                    if (column.FilterPropertyType == typeof(string))
+                    if (column.FilterPropertyType == typeof(string) && !(column.GetFilterOperator() == FilterOperator.IsNotNull || column.GetFilterOperator() == FilterOperator.IsNull))
                     {
                         property = $@"({property} == null ? """" : {property})";
                     }
